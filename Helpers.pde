@@ -26,8 +26,8 @@ class relCoordsChecker {
   
 }
 
-int maxValue (int arrayLink[], int leng) {
-  int mxm = arrayLink[0];
+float maxValue (float arrayLink[], int leng) {
+  float mxm = arrayLink[0];
   for (int i=0; i<leng; i++) {
     if (arrayLink[i]>mxm) {
       mxm = arrayLink[i];
@@ -36,8 +36,8 @@ int maxValue (int arrayLink[], int leng) {
   return mxm;
 };
 
-int minValue (int arrayLink[], int leng) {
-  int mim = arrayLink[0];
+float minValue (float arrayLink[], int leng) {
+  float mim = arrayLink[0];
   for (int i=0; i<leng; i++) {
     if (arrayLink[i]<mim) {
       mim = arrayLink[i];
