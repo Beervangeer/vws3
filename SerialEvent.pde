@@ -6,7 +6,13 @@ void serialEvent(Serial port){
      inData = inData.substring(1);        // cut off the leading 'Q'
      inData = trim(inData);               // trim the \n off the end
      IBI = int(inData);                   // convert ascii string to integer IBI                       
- 
+     
+     /*for (int i = 0; i < IBIStorage.length-1; i++){  
+       IBIStorage[i] = IBIStorage[i+1];   // new data enters on the right at pulseY.length-1
+     }
+     // scale and constrain incoming Pulse Sensor value to fit inside the pulse window
+     IBIStorage[PPG.length-1] = IBI; 
+     */
      return;     
    }
    
@@ -15,11 +21,11 @@ void serialEvent(Serial port){
      inData = trim(inData);               // trim the \n off the end
      int newPPG = int(inData);            // convert the ascii string to ppgY
      // move the Y coordinate of the Pulse Sensor data waveform over one pixel left
-     for (int i = 0; i < PPG.length-1; i++){  
-       PPG[i] = PPG[i+1];   // new data enters on the right at pulseY.length-1
+     for (int i = PPG.length-1; i >0; i--){  
+       PPG[i] = PPG[i-1];   // new data enters on the right at pulseY.length-1
      }
      // scale and constrain incoming Pulse Sensor value to fit inside the pulse window
-     PPG[PPG.length-1] = newPPG;     
+     PPG[0] = newPPG;     
      return;     
    }   
 }// END OF SERIAL EVENT

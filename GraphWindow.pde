@@ -18,7 +18,9 @@ class GraphWindow {
   float _minVal = 0;
   float _maxVal = 1000;
   
-  GraphWindow(float xpos, float ypos, float sizeX, float sizeY, float xUnits, float yUnits, float sampleTime, String name, String xName , String yName) {
+  float _marge;
+  
+  GraphWindow(float xpos, float ypos, float sizeX, float sizeY, float xUnits, float yUnits, float sampleTime, String name, String xName , String yName, float marge) {
     _x = xpos;
     _y = ypos;  
    _sizeX = sizeX;
@@ -29,6 +31,8 @@ class GraphWindow {
    _name = name;
    _xName= xName;
    _yName = yName;
+   _marge = marge;
+   
   }
     
   void drawWindow() {     
@@ -48,18 +52,18 @@ class GraphWindow {
       textSize(10);
       textAlign(CENTER);
       fill(255);
-      text( round( (_xUnits-i) *_sampleTime ) ,_x + (_xMultiplier *i), _y + _sizeY + 25);
+      text( round( i *_sampleTime ) ,_x + (_xMultiplier *i), _y + _sizeY + 25);
     
     }
     
-    float yTextMulti = (_maxVal- _minVal) /  _yUnits-1;
+    float yTextMulti = (_maxVal- _minVal) /  _yUnits;
     
     for(int i =0; i < _yUnits; i++){
       line( _x -10, _y + (_yMultiplier *i), _x + _sizeX, _y + (_yMultiplier *i));
       textSize(10);
       textAlign(RIGHT);
       fill(255);
-      text( round( (_yUnits-i+1)*yTextMulti + _minVal ) ,_x -15, _y + (_yMultiplier *i) + 5 );
+      text( round( (_yUnits-i)*yTextMulti + _minVal ) ,_x -15, _y + (_yMultiplier *i) + 5 );
     }
     
     textSize(14);
@@ -73,29 +77,65 @@ class GraphWindow {
     text(_xName ,_x + (_sizeX/2), _y + _sizeY + 45);
   }
   
-  void updateDataLine(float[] data){
+  void updateDataLine(float[][] data){
   
-    float xCoord;
-    float yCoord;
-    
-    float _xMultiplier = _sizeX/data.length;
-    
-    stroke(250,0,0);
-    strokeWeight(1);
-    noFill();
-    beginShape();    
-    
-    _minVal = lerp( _minVal, minValue(data,data.length-1)-100, 0.05);
-    _maxVal = lerp( _maxVal, maxValue(data,data.length-1)+100, 0.05);
-    
-    for (int i=1; i<data.length; i++){                   // scroll through the PPG array
-      xCoord = (i * _xMultiplier) + _x;
-      yCoord =  map(data[i],_minVal,_maxVal,_sizeY,0) + _y;  
-      vertex(xCoord,yCoord);                                        // set the vertex coordinates
+    for(int i=0; i < data.length; i++){
+      float xCoord;
+      float yCoord;
+      
+      float _xMultiplier = _sizeX/(data[i].length-1);
+      
+      if(i==0){
+        stroke(250,0,0);
+      }
+      if(i==1){
+        stroke(250,255,0);
+      }
+      if(i==2){
+        stroke(250,0,255);
+      }
+      if(i==3){
+        stroke(250,122,255);
+      }
+      if(i==4){
+        stroke(122,255,255);
+      }
+      if(i==5){
+        stroke(0,255,100);
+      }
+      if(i==6){
+        stroke(122,122,255);
+      }
+      if(i==7){
+        stroke(122,45,76);
+      }
+      if(i==8){
+        stroke(33,200,134);
+      }
+      if(i==9){
+        stroke(222,111,55);
+      }
+      if(i==10){
+        stroke(111,55,111);
+      }
+      
+      strokeWeight(1);
+      noFill();
+      beginShape();    
+      
+      _minVal = lerp( _minVal, minValue(data[i],data[i].length-1)-_marge , 0.05);
+      _maxVal = lerp( _maxVal, maxValue(data[i],data[i].length-1)+_marge , 0.05);
+      
+      for (int j=0; j<data[i].length; j++){                  
+        xCoord = ( j * _xMultiplier) + _x;
+        yCoord =  map(data[i][j],_minVal,_maxVal,_sizeY,0) + _y;  
+        vertex(xCoord,yCoord);    
+       // print(data[i][j] + ",");
+       
+      } //println(" ");
+      endShape();                                           
+      noStroke();
     }
-    endShape();                                           // connect the vertices
-    noStroke();
-  
   }
   
   void updateSize(float xpos, float ypos, float sizeX, float sizeY){

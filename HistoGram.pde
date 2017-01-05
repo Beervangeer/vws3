@@ -66,7 +66,7 @@ class HistoGram{
       textSize(10);
       textAlign(RIGHT);
       fill(255);
-      text( round( _maxOccurences*yTextMulti ) ,_x -15, _y + (_yMultiplier *i) + 5 );
+      text( round( (10-i)*yTextMulti ) ,_x -15, _y + (_yMultiplier *i) + 5 );
     }
     
     textSize(14);
