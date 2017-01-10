@@ -13,6 +13,7 @@ class FreqWindow{
   String _xName;
   String _yName;
   float _samplingRate;
+  Boolean autoPower = false;
   
   FreqWindow(float xpos, float ypos, float sizeX, float sizeY, float sampleMin, float sampleMax, float maxPower, int bins,String name, String xName , String yName, float SamplingRate){
   
@@ -32,10 +33,11 @@ class FreqWindow{
    
   }
   
-  void drawWindow() {     
+  void drawWindow() {   
+    
+   
     fill(185);
-    stroke(100);
-    strokeWeight(1);
+        strokeWeight(1);
     rect(_x,_y, _sizeX, _sizeY);
     
     float _xMultiplier = _sizeX/10;
@@ -78,6 +80,12 @@ class FreqWindow{
   }
   
   void calcBins(float[] dataArray){
+    
+     if(autoPower == true){
+     _maxPower = maxValue(dataArray, dataArray.length);
+      _maxPower =  _maxPower + ( _maxPower*0.1);
+    }
+    
     _bins = dataArray.length;
     _sampleMax = dataArray.length;
     float _xMultiplier = _sizeX/_bins;

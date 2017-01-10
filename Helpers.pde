@@ -40,6 +40,16 @@ float maxValue (float arrayLink[], int leng) {
   return mxm;
 };
 
+float maxValueInt (int arrayLink[], int leng) {
+  float mxm = arrayLink[0];
+  for (int i=0; i<leng; i++) {
+    if (arrayLink[i]>mxm) {
+      mxm = arrayLink[i];
+    }
+  }
+  return mxm;
+};
+
 float minValue (float arrayLink[], int leng) {
   float mim = arrayLink[0];
   for (int i=0; i<leng; i++) {
@@ -147,7 +157,7 @@ float[][] DiscreteFourier(float[] dataArray){
     for(int i =0; i<dataArray.length; i++){
       RE[k] = RE[k] + (dataArray[i] * cos( (2*PI*k*i)/dataArray.length) );
       IM[k] = IM[k] + (dataArray[i] * -sin( (2*PI*k*i)/dataArray.length) );
-      PS[k] = pow(RE[k],2) + pow(IM[k],2) ;
+      PS[k] = pow( pow(RE[k],2) + pow(IM[k],2) , 0.5) ;
     }
     
   }
@@ -202,20 +212,71 @@ float[] invertDFT(float[] rex, float[] imx, int lengthData){
   return reverse(returnData);
 }
 
-float[] invertDFTBin(float[] rex, float[] imx, int lengthData, int bin){
+float[] invertDFTBin(float[] rex, float[] imx, int lengthData, int[] bin){
 
   float[] returnData = new float[ lengthData];
  
   for(int i =0; i< rex.length; i++){
     
     for(int j=0; j < lengthData; j++){
-      if(i == bin){
+      for(int b=0; b < bin.length; b++){
+      if(i == bin[b]){
         returnData[j] = returnData[j] + ((rex[i] * cos( (2*PI*i*j)/lengthData))/rex.length);
         returnData[j] = returnData[j] + ((imx[i] * sin( (2*PI*i*j)/lengthData))/rex.length);
+      }
       }
     }
     
   }
   
   return reverse(returnData);
+}
+
+float[] invertDFTBinCos(float[] rex, float[] imx, int lengthData, int[] bin){
+
+  float[] returnData = new float[ lengthData];
+ 
+  for(int i =0; i< rex.length; i++){
+    
+    for(int j=0; j < lengthData; j++){
+      for(int b=0; b < bin.length; b++){
+      if(i == bin[b]){
+        returnData[j] = returnData[j] + ((rex[i] * cos( (2*PI*i*j)/lengthData))/rex.length);
+       // returnData[j] = returnData[j] + ((imx[i] * sin( (2*PI*i*j)/lengthData))/rex.length);
+      }
+      }
+    }
+    
+  }
+  
+  return reverse(returnData);
+}
+float[] invertDFTBinSin(float[] rex, float[] imx, int lengthData, int[] bin){
+
+  float[] returnData = new float[ lengthData];
+ 
+  for(int i =0; i< rex.length; i++){
+    
+    for(int j=0; j < lengthData; j++){
+      for(int b=0; b < bin.length; b++){
+      if(i == bin[b]){
+       // returnData[j] = returnData[j] + ((rex[i] * cos( (2*PI*i*j)/lengthData))/rex.length);
+        returnData[j] = returnData[j] + ((imx[i] * sin( (2*PI*i*j)/lengthData))/rex.length);
+      }
+      }
+    }
+    
+  }
+  
+  return reverse(returnData);
+}
+float[] getMagnitude(float[] rex, float[] imx, int lengthData){
+  float[] returnData = new float[ lengthData];
+  
+  for(int i=0; i < lengthData; i++){
+    returnData[i] = pow( (pow(rex[i],2) + pow(imx[i],2) ) , 0.5);
+  }
+  
+  return returnData;
+  
 }

@@ -8,6 +8,7 @@ HistoGram HistoGraph;
 Attractor AttractorGraph;
 GraphWindow TestSignalGraph;
 FreqWindow DFTGraph;
+PolarWindow PWindow;
 
 relCoordsChecker coordsChecker = new relCoordsChecker();
 
@@ -27,30 +28,36 @@ boolean pulse = false;
 
 void setup() {
   
-  size(1280, 720);
+  size(1600 , 1600);
   surface.setResizable(true);
   frameRate(60);
   
-  checkWindowX = 1280;
-  checkWindowY = 720;
+  checkWindowX = 1600 ;
+  checkWindowY = 1600;
   
-  coordsChecker.calcCoords(4,3,8,8,"left");
+  coordsChecker.calcCoords(6,6,10,8,"left");
   PPGGraph = new GraphWindow(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 10,12,300, "PPG Signal", "Milliseconds", "Input Signal",100);
   
-  coordsChecker.calcCoords(4,3 ,2.3,8,"left");
+  coordsChecker.calcCoords(6,6,3,8,"left");
   IBIGraph = new GraphWindow(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 10,10,1, "IBI Signal", "Milliseconds", "Input Signal",100);
   
-  coordsChecker.calcCoords(4,3,8,1.75,"left");
+  coordsChecker.calcCoords(6,6,10,2.60,"left");
   HistoGraph = new HistoGram(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY,500,1200,100,64, "IBI Histogram", "IBI Milliseconds", "Occurences");
+  HistoGraph.autoPower = true;
   
-  coordsChecker.calcCoords(4,3,2.3,1.75,"left");
-  AttractorGraph = new Attractor(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 12,12,"IBIAttractor", "Milliseconds", "Input Signal", 600,1200);
+  coordsChecker.calcCoords(6,6,3,2.6,"left");
+  AttractorGraph = new Attractor(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 12,12,"IBIAttractor", "Milliseconds", "Input Signal", 500,1200);
   
-  coordsChecker.calcCoords(4,3 ,1.35,8,"left");
+  coordsChecker.calcCoords(6,6,1.82,8,"left");
   TestSignalGraph = new GraphWindow(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 10,4,10, "TestSignal", "Samples", "Input Signal",2);
   
-  coordsChecker.calcCoords(4,3 ,1.35,1.75,"left");
+  coordsChecker.calcCoords(6,6,1.82,2.6,"left");
   DFTGraph = new FreqWindow(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY,0,50,3000,50, "Test DFT", "Frequencies", "Power", 50);
+  DFTGraph.autoPower = true;
+  
+  coordsChecker.calcCoords(6,6,1.3,8,"left");
+  PWindow = new PolarWindow(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY, 4,4,"PolarWindow", "Milliseconds", "Input Signal",-2,2);
+  
   
   PPG = new float[500];                
   SmoothIBI= new float[1000]; 
@@ -91,26 +98,38 @@ void draw() {
     
     HistoGraph.drawWindow();
     float[] shortenArr = SmoothIBI;
-    for(int i=0; i<5; i++){
+    for(int i=0; i<0; i++){
       shortenArr = shorten(shortenArr);
     }
     HistoGraph.calcBins(shortenArr);
     
     TestSignalGraph.drawWindow();
-    float[][] dataArraySignal = new float[12][];
-    dataArraySignal[0] = testSignal; 
+    float[][] dataArraySignal = new float[3][];
+     int[] invBin = new int[1];
+     invBin[0] = 8;
+     dataArraySignal[0] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin); 
+    
+     dataArraySignal[1] = invertDFTBinSin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin);
+     dataArraySignal[2] = invertDFTBinCos(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin);
+    // dataArraySignal[3] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin);
     //println(testSignal.length + "-" + (testSignal.length/2+1));
-   dataArraySignal[1] = invertDFT(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100); 
-   dataArraySignal[2] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,7);
-   dataArraySignal[3] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,8);
-   dataArraySignal[4] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,9);
-   dataArraySignal[5] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,10);
-   dataArraySignal[6] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,11);
-   dataArraySignal[7] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,12);
-   dataArraySignal[8] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,13);
-   dataArraySignal[9] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,14);
-   dataArraySignal[10] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,15);
-   dataArraySignal[11] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,16);
+ //  dataArraySignal[1] = invertDFT(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100);
+  /* int[] invBin = new int[1];
+   invBin[0] = 8;
+   int[] invBin1 = new int[1];
+   invBin1[0] = 4;
+   int[] invBin2 = new int[1];
+   invBin2[0] = 8;
+   int[] invBin3 = new int[2];
+   invBin3[0] = 8;
+   invBin3[1] = 4;*/
+  // invBin3[2] = 8;
+   /*dataArraySignal[0] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin);
+   dataArraySignal[1] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin1);
+   dataArraySignal[2] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin3);*/
+   //dataArraySignal[3] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,invBin3);
+   //dataArraySignal[5] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[1],100,10);
+   
    //dataArraySignal[3] = invertDFTBin(DiscreteFourier(testSignal)[0],DiscreteFourier(testSignal)[2],100,1);
     /*dataArraySignal[1] = CosDFT(testSignal,4)[0];
     dataArraySignal[2] = SinDFT(testSignal,4)[0];
@@ -119,7 +138,7 @@ void draw() {
     TestSignalGraph.updateDataLine(dataArraySignal);
      
     AttractorGraph.drawWindow();
-    AttractorGraph.updateDataLine( HistoGraph._meanStorage,10,490);
+    AttractorGraph.updateDataLine( SmoothIBI,250,500);
     
     DFTGraph.drawWindow();
     
@@ -127,33 +146,39 @@ void draw() {
     
      DFTGraph.calcBins(DiscreteFourier(testSignal)[2]);
     
+    PWindow.drawWindow();
+    PWindow.updateDataLine(dataArraySignal[1],dataArraySignal[2]);
+    
+    
     if(checkWindowX != width || checkWindowY != height){
       println("RESIZED");
       checkWindowX = width;
       checkWindowY = height;
-      coordsChecker.calcCoords(3,3,8,8,"left");
+      
+    /*  coordsChecker.calcCoords(6,6,8,8,"left");
       PPGGraph.updateSize(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY);
       
-      coordsChecker.calcCoords(3,3 ,2,8,"left");
+      coordsChecker.calcCoords(6,6 ,2,8,"left");
       IBIGraph.updateSize(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY);
       
-      coordsChecker.calcCoords(3,3,8,1.75,"left");
+      coordsChecker.calcCoords(6,6,8,1.75,"left");
       HistoGraph.updateSize(coordsChecker._posX, coordsChecker._posY, coordsChecker._sizeX, coordsChecker._sizeY);
-      
+      */
     }
     float time = float(millis())/1000;
  
     /*for(float i=0; i < 100; i++){
-      testSignal[int(i)] = sin((2*PI)*1*((i*0.01)+time) ) + sin((2*PI)*6*((i*0.01)+time) );
+      testSignal[int(i)] = sin((2*PI)*1*((i*0.01)+time) ); //+ sin((2*PI)*6*((i*0.01)+time) );
     }*/
    
-    for(int i=0; i < 100; i++){
+   for(int i=0; i < 100; i++){
       float test = (SmoothIBI[i*10] - HistoGraph.mean);
       float mapper = (test+HistoGraph.sd)/(HistoGraph.sd*2);
      // testSignal[i] = map( (SmoothIBI[i*5] - HistoGraph.mean), 0-HistoGraph.sd,HistoGraph.sd, -2,2);
      testSignal[i] = test/20;
      // print(map((SmoothIBI[i*5] - HistoGraph.mean), 0-HistoGraph.sdmoothIBI),HistoGraph.sd, -2,2));
     }
+    
     //testSignal = IntrlDecompFlt(testSignal)[1];
    // println();
     
@@ -167,8 +192,6 @@ void draw() {
        SmoothIBI[0] = lerp(SmoothIBI[0],LerpIBI,0.02); 
      
     }
-    
-   // println(millis());
-   // println(PPG[PPG.length -1]);
+ 
 }
  

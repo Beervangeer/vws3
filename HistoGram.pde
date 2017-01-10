@@ -17,6 +17,7 @@ class HistoGram{
   float[] _meanStorage = new float[500];
   float sd; //standard deviation
   float[] _sdStorage = new float[500];
+  Boolean autoPower = false;
   
   HistoGram(float xpos, float ypos, float sizeX, float sizeY, float sampleMin, float sampleMax, float maxOccurences, int bins,String name, String xName , String yName){
   
@@ -82,6 +83,11 @@ class HistoGram{
   }
   
   void calcBins(float[] data){
+    
+     if(autoPower == true){
+       _maxOccurences = maxValueInt(_binData, _binData.length);
+      // _maxOccurences =   _sampleMax + (  _sampleMax*0.1);
+    }
     
     for(int i=0; i< _binData.length-1 ; i++){
     
