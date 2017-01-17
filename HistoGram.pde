@@ -45,7 +45,7 @@ class HistoGram{
     rect(_x,_y, _sizeX, _sizeY);
     
     float _xMultiplier = _sizeX/10;
-    float _yMultiplier = _sizeY/10;
+    float _yMultiplier = _sizeY/6;
     float _binMultiplier = (_sampleMax - _sampleMin) / 10;
     
     stroke(100);
@@ -60,9 +60,9 @@ class HistoGram{
     
     }
     
-    float yTextMulti = _maxOccurences/  10;
+    float yTextMulti = _maxOccurences/  6;
     
-    for(int i =0; i < 10; i++){
+    for(int i =0; i < 6; i++){
       line( _x -10, _y + (_yMultiplier *i), _x + _sizeX, _y + (_yMultiplier *i));
       textSize(10);
       textAlign(RIGHT);
@@ -80,12 +80,17 @@ class HistoGram{
     fill(255);
     text(_xName ,_x + (_sizeX/2), _y + _sizeY + 45);
     
+     pushMatrix();
+    translate(_x-50,_y + (_sizeY/2));
+    rotate(-HALF_PI);
+    text(_yName,0,0);
+    popMatrix(); 
   }
   
   void calcBins(float[] data){
     
      if(autoPower == true){
-       _maxOccurences = maxValueInt(_binData, _binData.length);
+       _maxOccurences = maxValueInt(_binData, _binData.length) + (maxValueInt(_binData, _binData.length) *0.1) ;
       // _maxOccurences =   _sampleMax + (  _sampleMax*0.1);
     }
     
@@ -111,7 +116,7 @@ class HistoGram{
     }
     float _xMultiplier = _sizeX/_bins;
     stroke(255,0,0);
-    strokeWeight(2);
+    strokeWeight(1);
     for(int i=0; i< _binData.length-1 ; i++){
       line( _x + (_xMultiplier *i), _y + _sizeY, _x + (_xMultiplier *i), _y + _sizeY -( (_binData[i]/_maxOccurences ) * _sizeY) );
     }
@@ -164,30 +169,6 @@ class HistoGram{
     textAlign(RIGHT);
     fill(255);
     text("σ:" + floor(sd),((((mean-sd)-_sampleMin)/ (_sampleMax-_sampleMin)) * _sizeX ) + _x,_y + 45 );
-    
-    //Bellcurve test
-      
-   /*float[] yVal = new float[_bins];
-   
-   for(int i=0; i < _bins ; i++){
-     
-     float x = (_sampleMultiplier * i) + _sampleMin;
-     float firstpart= 1/ (6*sqrt(2 * PI) );
-     float secondpart = exp(0.5 * pow((x-mean)/6,2));
-     float checkBell = firstpart * secondpart ;
-     yVal[i] = checkBell;
-   }
-   
-    stroke(100,50,85);
-    strokeWeight(2);
-    for(int i=0; i< _bins ; i++){
-      line( _x + (_xMultiplier *i), _y + _sizeY, _x + (_xMultiplier *i), _y + _sizeY - ( yVal[i] *_maxOccurences));
-    }
-    
-    for(int i=0; i < yVal.length; i++){
-    print(yVal[i]);
-    println("-");
-    }*/
     
   }
   

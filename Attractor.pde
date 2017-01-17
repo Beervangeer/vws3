@@ -18,6 +18,8 @@ class Attractor {
   float _valMultiplierX;
   float _valMultiplierY;
   
+  Boolean autoPower = false;
+  
   Attractor(float xpos, float ypos, float sizeX, float sizeY, float xUnits, float yUnits,String name, String xName , String yName, float min, float max){
     _x = xpos;
     _y = ypos;  
@@ -77,6 +79,11 @@ class Attractor {
   
   void updateDataLine(float[] data, int distance, int points){
   
+    if(autoPower == true){
+     _max = maxValue(data, data.length);
+      _min =  minValue(data, data.length);
+    }
+    
     float xCoord;
     float yCoord;  
     

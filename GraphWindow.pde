@@ -75,6 +75,13 @@ class GraphWindow {
     textAlign(CENTER);
     fill(255);
     text(_xName ,_x + (_sizeX/2), _y + _sizeY + 45);
+    
+    pushMatrix();
+    translate(_x-50,_y + (_sizeY/2));
+    rotate(-HALF_PI);
+    text(_yName,0,0);
+    popMatrix(); 
+  
   }
   
   void updateDataLine(float[][] data){
@@ -123,8 +130,9 @@ class GraphWindow {
       noFill();
       beginShape();    
       
-      _minVal = lerp( _minVal, minValue(data[i],data[i].length-1)-_marge , 0.05);
+     _minVal = lerp( _minVal, minValue(data[i],data[i].length-1)-_marge , 0.05);
       _maxVal = lerp( _maxVal, maxValue(data[i],data[i].length-1)+_marge , 0.05);
+     
       
       for (int j=0; j<data[i].length; j++){                  
         xCoord = ( j * _xMultiplier) + _x;

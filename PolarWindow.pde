@@ -89,11 +89,6 @@ class PolarWindow {
   }
   
   
-  void updateDataLine(float[][] data){
-  
-   
-  }
-  
   void updateSize(float xpos, float ypos, float sizeX, float sizeY){
     _x = xpos;
     _y = ypos;  
@@ -101,36 +96,51 @@ class PolarWindow {
    _sizeY = sizeY;
   }
   
-  void updateDataLine(float[] data,float[] data2){
+  void updateDataLine(float[] data,float[] data2, int[] bins){
   
     float xCoord;
     float yCoord;  
     
    // size(100, 100);
+    float _xMultiplier = _sizeX/_xUnits;
+    float _yMultiplier = _sizeY/_yUnits;
+    
+    float calcPhase = 0;
+    
+  for(int i=0 ; i < bins.length; i++){
    
-    
-    stroke(250,0,0);
-    strokeWeight(10);
-     point((((data[0]-_min)/(_max-_min))*_sizeX)+_x, (((data2[0]-_min)/(_max-_min))*_sizeY)+_y);
-    strokeWeight(1);
-    noFill();
-    beginShape(); 
-    
-    xCoord = (((0-_min)/(_max-_min))*_sizeX)+_x;
-    yCoord = (((0-_min)/(_max-_min))*_sizeY)+_y;  
-    vertex(xCoord,yCoord);  
-    
-    vertex((((data[0]-_min)/(_max-_min))*_sizeX)+_x, (((data2[0]-_min)/(_max-_min))*_sizeY)+_y);   
-    
-    /*for (int i=0 ;i<data.length; i++){                   // scroll through the PPG array
-      xCoord = (((data[i]-_min)/(_max-_min))*_sizeX)+_x;
-      yCoord = (((data2[i]-_min)/(_max-_min))*_sizeY)+_y;  
-      vertex(xCoord,yCoord);                                        // set the vertex coordinates
-    }*/
+      calcPhase = atan2(data2[bins[i]],data[bins[i]]) ;
+     
    
-    endShape();                                           // connect the vertices
-    noStroke();
-  
+      
+     /* 
+      strokeWeight(2);
+      line( _x + (_xMultiplier * _xUnits/2) + 5, _y + (_yMultiplier * _yUnits/2), _x + (_xMultiplier * _xUnits/2) + 5,  _y + (_yMultiplier * _yUnits/2)+ (_yMultiplier *  calcPhase ));
+      */
+      
+      stroke(250,0,0);
+      strokeWeight(2);
+      
+       point((((data[bins[i]]-_min)/(_max-_min))*_sizeX)+_x, (((data2[bins[i]]-_min)/(_max-_min))*_sizeY)+_y);
+      strokeWeight(0.5);
+      noFill();
+      beginShape(); 
+      
+      xCoord = (((0-_min)/(_max-_min))*_sizeX)+_x;
+      yCoord = (((0-_min)/(_max-_min))*_sizeY)+_y;  
+      vertex(xCoord,yCoord);  
+      
+      vertex((((data[bins[i]]-_min)/(_max-_min))*_sizeX)+_x, (((data2[bins[i]]-_min)/(_max-_min))*_sizeY)+_y);   
+      
+      /*for (int i=0 ;i<data.length; i++){                   // scroll through the PPG array
+        xCoord = (((data[i]-_min)/(_max-_min))*_sizeX)+_x;
+        yCoord = (((data2[i]-_min)/(_max-_min))*_sizeY)+_y;  
+        vertex(xCoord,yCoord);                                        // set the vertex coordinates
+      }*/
+     
+      endShape();                                           // connect the vertices
+      noStroke();
+    
+    }
   }
-  
 } 
